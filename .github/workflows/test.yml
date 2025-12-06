@@ -1,0 +1,13 @@
+name: Test Local Runner
+
+on: [push]
+
+jobs:
+  check-vm:
+    runs-on: self-hosted
+    steps:
+      - name: Check Connection
+        run: |
+          echo "Привіт! Я працюю всередині твоєї віртуалки!"
+          echo "Ім'я хоста: $(hostname)"
+          echo "Хто я: $(whoami)"
