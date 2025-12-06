@@ -1,13 +1,31 @@
-name: Test Local Runner
+name: Deploy Zabbix & App
 
-on: [push]
+on:
+  push:
+    branches: [ "main" ]
 
 jobs:
-  check-vm:
-    runs-on: self-hosted
+  deploy:
+    runs-on: self-hosted  # Виконуємо на твоїй віртуалці
     steps:
-      - name: Check Connection
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Deploy with Docker
         run: |
-          echo "Привіт! Я працюю всередині твоєї віртуалки!"
-          echo "Ім'я хоста: $(hostname)"
-          echo "Хто я: $(whoami)"
+          echo "🚀 Починаю оновлення..."
+          
+          # 1. Переходимо в папку проекту (GitHub Runner сам створює її)
+          # Нам не треба робити cd, ми вже в корені репозиторію!
+          
+          # 2. Перезапускаємо контейнери
+          # (Припускаємо, що у вашому репозиторії вже лежить docker-compose.yaml)
+          # Якщо його там немає - спочатку залийте його в репозиторій!
+          
+          if [ -f "docker-compose.yaml" ]; then
+            sudo docker compose down
+            sudo docker compose up -d --build
+            echo "✅ Успішно оновлено!"
+          else
+            echo "⚠️ Файл docker-compose.yaml не знайдено в репозиторії!"
+          fi
